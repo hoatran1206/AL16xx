@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ifm AL16xx</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+    body {
+  background-color: var(--bg, #121212);
+  color: var(--text, #e0e0e0);
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+    .header {
+        background-color: var(--accent);
+        padding: 16px 24px;
+        font-size: 24px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        color: #000;
+    }
+    .header img {
+        height: 40px;
+        margin-right: 12px;
+    }
+    .nav {
+        background-color: var(--card);
+        display: flex;
+        justify-content: center;
+        padding: 12px;
+        gap: 16px;
+        border-bottom: 1px solid #333;
+    }
+    .nav a {
+        color: var(--text);
+        text-decoration: none;
+        padding: 10px 18px;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: 0.3s ease;
+    }
+    .nav a:hover, .nav a.active {
+        background-color: #f90;
+        color: #000;
+        font-weight: 700;
+    }
+    .container {
+        padding: 32px;
+        display: none;
+    }
+    .visible {
+        display: block !important;
+    }
+    .port-menu, .eds-submenu {
+        background-color: var(--card);
+        padding: 20px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        border-radius: 12px;
+    }
+    .port-menu a, .eds-submenu a, .eds-submenu button {
+        background-color: var(--card);
+        color: var(--text);
+        padding: 10px 16px;
+        border: none;
+        border-radius: 6px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    .port-menu a:hover, .port-menu a.active,
+    .eds-submenu a:hover, .eds-submenu a.active,
+    .eds-submenu button:hover, .eds-submenu button.active {
+        background-color: #f90;
+        color: #000;
+        font-weight: 600;
+        transform: scale(1.05);
+    }
+    .table-container {
+        background-color: var(--card);
+        border-radius: 10px;
+        padding: 24px;
+        box-shadow: 0 0 15px rgba(255,153,0,0.15);
+        margin-top: 24px;
+        display: none;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 12px;
+    }
+    th, td {
+        border: 1px solid var(--border);
+        padding: 10px 15px;
+        text-align: left;
+    }
+
+    th {
+      background-color: #2a2a2a;
+      color: var(--text);
+    }
+    body.light-mode th {
+      background-color: #eaeaea;
+      color: #000;
+    }
+    .upload-btn, .delete-btn {
+        padding: 10px 16px;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    .upload-btn {
+        background-color: #f90;
+        color: #000;
+    }
+    .upload-btn:hover {
+        background-color: #e88b00;
+    }
+    .delete-btn {
+        background-color: #e74c3c;
+        color: #fff;
+    }
+    .delete-btn:hover {
+        background-color: #c0392b;
+    }
+    input[type="number"], select {
+        background-color: var(--card);
+        color: var(--text);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        padding: 6px 10px;
+    }
+    h2, h3 {
+        color: #f90;
+    }
+  .dark-toggle {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    background-color: #2a2a2a;
+    color: #f0f0f0;
+    border: 1px solid #444;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .dark-toggle:hover {
+    background-color: #f90;
+    color: #000;
+    font-weight: bold;
+  }
+
+  :root {
+    --bg: #ffffff;
+    --text: #000000;
+    --card: #f9f9f9;
+    --accent: #f26101;
+    --border: #ccc;
+  }
+</style>
+</head>
+<body>
+<div class="header">
+  <img src="\C:\Users\ustranho\Desktop\IO-Link\ifm_logo2.png" alt="ifm logo"> ifm AL16xx
+</div>
+<div class="nav">
+  <a onclick="showPage('home', this)" class="active">Home</a>
+  <a onclick="showPage('diagnostics', this)">Diagnostics</a>
+  <a onclick="showPage('configuration', this)">Configuration</a>
+  <a onclick="showPage('advanced', this)">Advanced</a>
+  <a onclick="showPage('attached-devices', this)">Attached Devices</a>
+  <a onclick="showPage('eds-creation', this)">EDS Creation</a>
+  <a onclick="showPage('support', this)">Support</a>
+</div>
+<div id="home" class="container visible">
+  <h2>Welcome to the ifm AL16xx Interface</h2>
+  <div style="display: flex; flex-wrap: wrap; align-items: flex-start;">
+    <div>
+      <img src="\C:\Users\ustranho\Desktop\IO-Link\IO-Link master .jpg" alt="AL1590 Module Diagram" style="width: 800px; height: auto; border-radius: 30px;">
+    </div>
+    <div style="margin-left: 300px;">
+      <h3 style="color: var(--accent); margin-bottom: 10px;">Module Info</h3>
+      <table style="border-collapse: collapse; width: 300%;">
+        <tbody>
+          <tr style="height: 20px;"><td style="padding: 10px 0;"><strong>Product Name</strong></td><td style="padding: 20px 0;">IO-Link Master 8P IP67</td></tr>
+          <tr style="height: 20px;"><td style="padding: 10px 0;"><strong>Order Code</strong></td><td style="padding: 10px 0;">AL1590</td></tr>
+          <tr style="height: 20px;"><td style="padding: 10px 0;"><strong>Serial Number</strong></td><td style="padding: 10px 0;">HU00943309727751</td></tr>
+          <tr style="height: 20px;"><td style="padding: 10px 0;"><strong>Hardware Version</strong></td><td style="padding: 10px 0;">Sample B</td></tr>
+          <tr style="height: 20px;"><td style="padding: 10px 0;"><strong>Firmware Version</strong></td><td style="padding: 10px 0;">1.0.3.6</td></tr>
+          <tr style="height: 20px;"><td style="padding: 10px 0;"><strong>System Name</strong></td><td style="padding: 10px 0;">(blank)</td></tr>
+          <tr style="height: 20px;"><td style="padding: 10px 0;"><strong>Contact</strong></td><td style="padding: 10px 0;">(blank)</td></tr>
+          <tr style="height: 20px;"><td style="padding: 10px 0;"><strong>Location</strong></td><td style="padding: 10px 0;">(blank)</td></tr>
+          <tr style="height: 20px;"><td style="padding: 10px 0;"><strong>IP Address</strong></td><td style="padding: 10px 0;">192.168.1.250</td></tr>
+          <tr style="height: 20px;"><td style="padding: 10px 0;"><strong>Subnet Mask</strong></td><td style="padding: 10px 0;">255.255.255.0</td></tr>
+          <tr style="height: 20px;"><td style="padding: 10px 0;"><strong>Default Gateway</strong></td><td style="padding: 10px 0;">0.0.0.0</td></tr>
+          <tr style="height: 20px;"><td style="padding: 10px 0;"><strong>MAC Address</strong></td><td style="padding: 10px 0;">00:02:01:62:10:8C</td></tr>
+          <tr style="height: 20px;"><td style="padding: 10px 0;"><strong>Ethernet Port 1</strong></td><td style="padding: 10px 0;">100 Mbit/s</td></tr>
+          <tr style="height: 20px;"><td style="padding: 10px 0;"><strong>Ethernet Port 2</strong></td><td style="padding: 10px 0;">linkDown</td></tr>
+          <tr style="height: 20px;"><td style="padding: 10px 0;"><strong>PLC Connection</strong></td><td style="padding: 10px 0;">🔒 (Locked)</td></tr>
+          <tr style="height: 20px;"><td style="padding: 10px 0;"><strong>LED Legend</strong></td><td style="padding: 10px 0;">OPEN</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div id="diagnostics" class="container">
+  <h2>Diagnostics</h2>
+  <div style="display: flex; gap: 32px; flex-wrap: wrap;">
+    <div style="flex: 1; min-width: 320px; background-color: var(--card); padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+      <h3 style="color: var(--accent);">Information</h3>
+      <table style="width: 100%; border-collapse: collapse;">
+        <tbody>
+          <tr><td><strong>Product Name:</strong></td><td>ifm AL16xx IO-Link Master</td></tr>
+          <tr><td><strong>Order Code:</strong></td><td>AL16xx</td></tr>
+          <tr><td><strong>Product URI:</strong></td><td><a href="https://products.balluff.com/BNI%20XG1-505-0A5-K083/BNI00HP/HU00943309727751" target="_blank">View Product</a></td></tr>
+          <tr><td><strong>Serial Number:</strong></td><td>HU00943309727751</td></tr>
+          <tr><td><strong>Hardware Version:</strong></td><td>1.0.4</td></tr>
+          <tr><td><strong>Firmware Version:</strong></td><td>1.1.0</td></tr>
+          <tr><td><strong>WebUI Version:</strong></td><td>2.8.6.240305163307</td></tr>
+          <tr><td><strong>System Name:</strong></td><td>-</td></tr>
+          <tr><td><strong>Contact:</strong></td><td>-</td></tr>
+          <tr><td><strong>Location:</strong></td><td>-</td></tr>
+          <tr><td><strong>Browser Version:</strong></td><td>chrome 134.0</td></tr>
+          <tr><td><strong>Browser Time:</strong></td><td>2:19:14 PM</td></tr>
+          <tr><td><strong>System Time:</strong></td><td>1970-01-04 17:10:31</td></tr>
+          <tr><td><strong>System Uptime:</strong></td><td>3 days 22 h 10 min 31 sec</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="flex: 1; min-width: 320px; background-color: var(--card); padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+      <h3 style="color: var(--accent);">Extended Information</h3>
+      <table style="width: 100%; border-collapse: collapse;">
+        <tbody>
+          <tr><td><strong>MAC Address:</strong></td><td>00-02-01-62-10-8c</td></tr>
+          <tr><td><strong>IP Address:</strong></td><td>192.168.1.250</td></tr>
+          <tr><td><strong>Subnet Mask:</strong></td><td>255.255.255.0</td></tr>
+          <tr><td><strong>Default Gateway:</strong></td><td>0.0.0.0</td></tr>
+          <tr><td><strong>Ethernet Port 1:</strong></td><td>100 Mbit/s</td></tr>
+          <tr><td><strong>Ethernet Port 2:</strong></td><td>100 Mbit/s</td></tr>
+          <tr><td><strong>PLC Connection:</strong></td><td>No</td></tr>
+          <tr><td><strong>Free Flash Memory:</strong></td><td>2024 kB</td></tr>
+          <tr><td><strong>Deleted Log Entries:</strong></td><td>-</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div style="margin-top: 32px; background-color: var(--card); padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+    <h3 style="color: var(--accent);">Activity Log</h3>
+    <table style="width: 100%; border-collapse: collapse;">
+      <thead>
+        <tr><th>No.</th><th>Severity</th><th>Date</th><th>Origin</th><th>Message</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>7</td><td>NOTICE</td><td>1970-01-04 22:10:11.000Z</td><td>IO</td><td>Port 4: Event: New device detected</td></tr>
+        <tr><td>6</td><td>INFO</td><td>1970-01-04 22:08:54.000Z</td><td>SYS</td><td>System started</td></tr>
+        <tr><td>5</td><td>INFO</td><td>1970-01-04 22:08:41.000Z</td><td>SYS</td><td>System started</td></tr>
+        <tr><td>4</td><td>INFO</td><td>1970-01-04 21:29:00.000Z</td><td>SYS</td><td>System started</td></tr>
+        <tr><td>3</td><td>INFO</td><td>1970-01-04 21:25:25.000Z</td><td>SYS</td><td>System started</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div id="configuration" class="container">
+  <div class="port-menu">
+    <a onclick="showSubPage('general-content', this, 'port-menu')" class="active">IO-Link</a>
+    <a onclick="showSubPage('network-content', this, 'port-menu')">Network</a>
+    <a onclick="showSubPage('iot-content', this, 'port-menu')">IoT</a>
+    <a onclick="showSubPage('ioddSetting-content', this, 'port-menu')">IODD</a>
+    <a onclick="showSubPage('firmware-content', this, 'port-menu')">Firmware</a>
+    <a onclick="showSubPage('outputTest-content', this, 'port-menu')">Output Test</a>
+  </div>
+
+  <div id="general-content" class="table-container visible">
+    <h2 style="color: #f90; margin-bottom: 10px;">IO-link</h2>
+    <p>IO-link master details...</p>
+  </div>
+  <div id="network-content" class="table-container">
+    <h2 style="color: #f90; margin-bottom: 10px;">Network</h2>
+    <p>Communication protocol (EIP, PN, ECAT) and IP address setting details...</p>
+  </div>
+  <div id="iot-content" class="table-container">
+    <h2 style="color: #f90; margin-bottom: 10px;">IoT</h2>
+    <p>MQTT and OPC UA content here.</p>
+  </div>
+  <div id="ioddSetting-content" class="table-container">
+    <h2 style="color: #f90; margin-bottom: 10px;">IODD</h2>
+    <p>IODD and device memory capacity details...</p>
+  </div>
+  <div id="firmware-content" class="table-container">
+    <h2 style="color: #f90; margin-bottom: 10px;">Firmware</h2>
+    <p>Place holder for firmware upload.</p>
+  </div>
+  <div id="outputTest-content" class="table-container">
+    <h2 style="color: #f90; margin-bottom: 10px;">Output Test</h2>
+    <p>Digital output test details.. </p>
+  </div>
+</div>
+<div id="advanced" class="container">
+  <h2>Advanced Settings</h2>
+  <p>Advanced options and features.</p>
+</div>
+<div id="support" class="container">
+  <h2>Support</h2>
+  <p>Support and documentation information here.</p>
+</div>
+<script>
+  function showPage(pageId, button) {
+    document.querySelectorAll('.container').forEach(page => page.classList.remove('visible'));
+    const pageElement = document.getElementById(pageId);
+    if (pageElement) {
+      pageElement.classList.add('visible');
+    } else {
+      console.warn(`Page with ID '${pageId}' not found.`);
+    }
+    document.querySelectorAll('.nav a').forEach(link => link.classList.remove('active'));
+    if (button) button.classList.add('active');
+  }
+  function showSubPage(subPageId, button, groupClass) {
+    const container = button.closest('.container');
+    if (!container) return;
+    container.querySelectorAll('.table-container').forEach(page => page.classList.remove('visible'));
+    const target = container.querySelector(`#${subPageId}`);
+    if (target) target.classList.add('visible');
+    container.querySelectorAll(`.${groupClass} a`).forEach(btn => btn.classList.remove('active'));
+    if (button) button.classList.add('active');
+  }
+function autoDetectSensorValues(portId) {
+  if (portId === 3) {
+    const inputSelect = document.querySelector('#calculated-values select[multiple]:nth-of-type(1)');
+    const outputSelect = document.querySelector('#calculated-values select[multiple]:nth-of-type(2)');
+    const inputOptions = ['Totalizer', 'Flow', 'Temperature', 'Device Status', 'Out1', 'Out2'];
+    const outputOptions = ['Flow Override', 'Totalizer Reset'];
+
+    inputSelect.innerHTML = inputOptions.map(opt => `<option selected>${opt}</option>`).join('');
+    outputSelect.innerHTML = outputOptions.map(opt => `<option selected>${opt}</option>`).join('');
+  }
+}
+
+// Simulate auto-detection on load
+window.addEventListener('DOMContentLoaded', () => {
+  autoDetectSensorValues(3);
+});
+</script>
+<div id="attached-devices" class="container">
+  <div class="port-menu">
+    <a onclick="showSubPage('iodd-content', this, 'port-menu')" class="active">Import IODD</a>
+    <a onclick="showSubPage('summary-content', this, 'port-menu')">Summary</a>
+    <a onclick="showSubPage('port1-content', this, 'port-menu')">Port 1</a>
+    <a onclick="showSubPage('port2-content', this, 'port-menu')">Port 2</a>
+    <a onclick="showSubPage('port3-content', this, 'port-menu')">Port 3</a>
+    <a onclick="showSubPage('port4-content', this, 'port-menu')">Port 4</a>
+    <a onclick="showSubPage('port5-content', this, 'port-menu')">Port 5</a>
+    <a onclick="showSubPage('port6-content', this, 'port-menu')">Port 6</a>
+    <a onclick="showSubPage('port7-content', this, 'port-menu')">Port 7</a>
+    <a onclick="showSubPage('port8-content', this, 'port-menu')">Port 8</a>
+  </div>
+  <div id="iodd-content" class="table-container visible">
+  <h2 style="color: #f90; margin-bottom: 10px;">Import IODD Files</h2>
+  <p style="margin-bottom: 15px;">User IODD files (click filename to view)</p>
+  <div style="overflow-x: auto;">
+    <table>
+      <thead>
+        <tr style="background-color: var(--card); color: var(--text);">
+          <th>Vendor</th>
+          <th>Device</th>
+          <th>IODD Filename</th>
+          <th>Device Image</th>
+          <th>Vendor Image</th>
+          <th>Size</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="color: gray;">310</td>
+          <td style="color: gray;">582</td>
+          <td><a href="#" style="color: var(--accent); font-weight: 600; text-decoration: underline;">ifm-000246-20151118-IODD1.1.xml</a></td>
+          <td><img src="\C:\Users\ustranho\Desktop\IO-Link\ifm-TN-NG-pic.png" alt="Device" width="50" style="border-radius: 4px; background-color: var(--card);"></td>
+          <td><img src="\C:\Users\ustranho\Desktop\IO-Link\ifm-IO-Link-icon.png" alt="Vendor" width="50" style="border-radius: 4px; background-color: var(--card);"></td>
+          <td style="color: gray;">145K</td>
+          <td><input type="checkbox"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div style="margin-top: 15px; display: flex; gap: 10px;">
+    <button class="upload-btn">Upload File</button>
+    <button class="delete-btn">Delete Selected</button>
+  </div>
+</div>
+  <div id="summary-content" class="table-container">
+    <h2>IO-Link Device Configuration Summary</h2>
+    <table style="width: 100%; border-collapse: collapse;">
+      <thead style="background-color: #2a2a2a; color: white;">
+        <tr>
+          <th>DEVICE SETTINGS</th>
+          <th>PORT 1</th>
+          <th>PORT 2</th>
+          <th>PORT 3</th>
+          <th>PORT 4</th>
+          <th>PORT 5</th>
+          <th>PORT 6</th>
+          <th>PORT 7</th>
+          <th>PORT 8</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Vendor Name</strong></td><td></td><td></td><td></td><td>ifm electronic gmbh</td><td></td><td></td><td></td><td></td></tr>
+        <tr><td><strong>VENDOR</strong></td><td></td><td></td><td></td><td>310</td><td></td><td></td><td></td><td></td></tr>
+        <tr><td><strong>DEVICE</strong></td><td></td><td></td><td></td><td>582</td><td></td><td></td><td></td><td></td></tr>
+        <tr><td><strong>Description</strong></td><td></td><td></td><td></td><td>Electronic temperature sensor, -50...150 ºC, IO-Link</td><td></td><td></td><td></td><td></td></tr>
+        <tr><td><strong>IO-Link Version</strong></td><td></td><td></td><td></td><td>1.1</td><td></td><td></td><td></td><td></td></tr>
+        <tr><td><strong>Hardware Version</strong></td><td></td><td></td><td></td><td>AA</td><td></td><td></td><td></td><td></td></tr>
+        <tr><td><strong>Firmware Version</strong></td><td></td><td></td><td></td><td>V1.18</td><td></td><td></td><td></td><td></td></tr>
+        <tr><td><strong>Baud Rate</strong></td><td></td><td></td><td></td><td>38400</td><td></td><td></td><td></td><td></td></tr>
+        <tr><td><strong>SIO Mode</strong></td><td></td><td></td><td></td><td>Yes</td><td></td><td></td><td></td><td></td></tr>
+        <tr><td><strong>Min Cycle Time</strong></td><td></td><td></td><td></td><td>2.3 ms</td><td></td><td></td><td></td><td></td></tr>
+        <tr><td><strong>IODD Name</strong></td><td></td><td></td><td></td><td>ifm-000246-20151118-IODD1.1.xml</td><td></td><td></td><td></td><td></td></tr>
+        <tr><td><strong>Serial Number</strong></td><td></td><td></td><td></td><td>g00120701165</td><td></td><td></td><td></td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <!-- Port 4 Additional Tabs -->
+  <div id="port4-tabs" class="table-container">
+    <div class="port-menu">
+      <a onclick="showSubPage('port4-parameter-iodd', this, 'port-menu')" class="active">Parameter (IODD)</a>
+      <a onclick="showSubPage('port4-isdu', this, 'port-menu')">ISDU Parameter</a>
+      <a onclick="showSubPage('port4-events', this, 'port-menu')">Events</a>
+    </div>
+    <div id="port4-parameter-iodd" class="table-container visible">
+      <p>Parameter content goes here...</p>
+    </div>
+    <div id="port4-isdu" class="table-container">
+      <p>ISDU parameter content placeholder.</p>
+    </div>
+    <div id="port4-events" class="table-container">
+      <p>Events content placeholder.</p>
+    </div>
+  </div>
+  <div id="port1-content" class="table-container">
+    <p>Port 1 details...</p>
+  </div>
+  <div id="port2-content" class="table-container">
+    <p>Port 2 details...</p>
+  </div>
+  <div id="port3-content" class="table-container">
+    <p>Port 3 details...</p>
+  </div>
+  <div id="port4-content" class="table-container">
+    <div onclick="toggleSection('port4-details')" style="background-color: #f90; color: #000; padding: 10px 16px; border-radius: 6px; font-weight: bold; cursor: pointer;">
+      General Information
+    </div>
+    <div id="port4-details" class="hidden">
+      <section>
+        <div style="display: flex; gap: 40px; flex-wrap: nowrap; align-items: flex-start;">
+          <div style="flex: 1; min-width: 280px;">
+            <table style="border-collapse: collapse; width: 100%;">
+              <tbody>
+                <tr><td style="padding: 8px 12px; font-weight: bold;">Port Status:</td><td>✅</td></tr>
+                <tr><td style="padding: 8px 12px; font-weight: bold;">Port Class:</td><td>A</td></tr>
+                <tr><td style="padding: 8px 12px; font-weight: bold;">IO-Link:</td><td>V1.1</td></tr>
+                <tr><td style="padding: 8px 12px; font-weight: bold;">Vendor ID:</td><td>310 (0x0136)</td></tr>
+                <tr><td style="padding: 8px 12px; font-weight: bold;">Device ID:</td><td>582 (0x0246)</td></tr>
+                <tr><td style="padding: 8px 12px; font-weight: bold;">Vendor Name:</td><td>ifm electronic gmbh</td></tr>
+                <tr><td style="padding: 8px 12px; font-weight: bold;">Vendor Text:</td><td>www.ifm.com</td></tr>
+                <tr><td style="padding: 8px 12px; font-weight: bold;">Product Name:</td><td>TN2511</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div style="flex: 1; min-width: 280px;">
+            <table style="border-collapse: collapse; width: 100%;">
+              <tbody>
+                <tr><td style="padding: 8px 12px; font-weight: bold;">Product ID:</td><td>TN2511</td></tr>
+                <tr><td style="padding: 8px 12px; font-weight: bold;">Product Text:</td><td>Electronic temperature sensor</td></tr>
+                <tr><td style="padding: 8px 12px; font-weight: bold;">Hardware Version:</td><td>AA</td></tr>
+                <tr><td style="padding: 8px 12px; font-weight: bold;">Firmware Version:</td><td>V1.18</td></tr>
+                <tr><td style="padding: 8px 12px; font-weight: bold;">Serial Number:</td><td>g00120701165</td></tr>
+                <tr><td style="padding: 8px 12px; font-weight: bold;">IODD:</td><td><a href="#">V1.0.0.12 (2015-11-18)</a></td></tr>
+                <tr><td style="padding: 8px 12px; font-weight: bold;">External Resource:</td><td>-</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div style="flex: 1; min-width: 280px;">
+            <img src="\C:\Users\ustranho\Desktop\IO-Link\ifm-TN-NG-pic.png" alt="Device Image" style="width: 100%; max-width: 300px; border-radius: 8px;">
+          </div>
+        </div>
+      </section>
+    </div>
+  
+    <div onclick="toggleSection('port4-process')" style="background-color: #f90; color: #000; padding: 10px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 20px;">
+      Process Data
+    </div>
+    <div id="port4-process" class="hidden">
+      <section>
+        <h3>Process Data</h3>
+        <p><strong>Input (Hex):</strong> 03 C4</p>
+        <p><strong>Output (Hex):</strong> Invalid</p>
+        <p><strong>Pin 2 Input:</strong> 0</p>
+        <table style="margin-top: 10px; border-collapse: collapse; width: 100%; max-width: 500px;">
+          <thead>
+            <tr><th style="text-align: left; padding: 8px;">Name</th><th style="text-align: left; padding: 8px;">Value</th></tr>
+          </thead>
+          <tbody>
+            <tr><td style="padding: 8px;">Temperature</td><td style="padding: 8px;">24.1</td></tr>
+            <tr><td style="padding: 8px;">OUT1</td><td style="padding: 8px;"><input type="checkbox" checked disabled></td></tr>
+          </tbody>
+        </table>
+      </section>
+    </div>
+
+    <div onclick="toggleSection('port4-iodd')" style="background-color: #f90; color: #000; padding: 10px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 20px;">
+      Parameter (IODD)
+    </div>
+    <div id="port4-iodd" class="hidden">
+      <section>
+        <h3>Parameter (IODD)</h3>
+        <div style="display: flex; gap: 24px; margin-bottom: 12px;">
+          <button class="upload-btn" onclick="showIoddTab('identification')" id="btn-identification">Identification</button>
+          <button class="upload-btn active" onclick="showIoddTab('parameter')" id="btn-parameter">Parameter</button>
+          <button class="upload-btn" onclick="showIoddTab('observation')" id="btn-observation">Observation</button>
+          <button class="upload-btn" onclick="showIoddTab('diagnosis')" id="btn-diagnosis">Diagnosis</button>
+        </div>
+        <div id="iodd-identification" class="iodd-tab hidden"><p></p></div>
+        <div id="iodd-parameter" class="iodd-tab">
+          <ul style="list-style: none; padding-left: 0;">
+            <li><strong>Output configuration</strong>
+              <ul style="margin-left: 20px;">
+                <li>Digital output 1</li>
+                <li>Analog Output 2</li>
+              </ul>
+            </li>
+            <li><strong>Memory</strong></li>
+            <li><strong>Fault Configuration Output 1</strong></li>
+            <li><strong>Fault Configuration Output 2</strong></li>
+            <li><strong>Setting of the sensor display</strong></li>
+            <li><strong>Calibration</strong></li>
+            <li><strong>Setup</strong></li>
+          </ul>
+        </div>
+      </section>
+    </div>
+
+    <div onclick="toggleSection('port4-isdu')" style="background-color: #f90; color: #000; padding: 10px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 20px;">
+      ISDU Parameter
+    <div id="port4-isdu" class="hidden">
+      <section>
+        <h3>ISDU Parameter</h3>
+      </section>
+    </div>
+    </div>
+  
+    <div onclick="toggleSection('port4-event')" style="background-color: #f90; color: #000; padding: 10px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 20px;">
+      Events Data
+    <div id="port4-event" class="hidden">
+      <section>
+        <h3>Sensor Events Data</h3>
+      </section>
+    </div>
+    </div>
+  </div>
+  <script>
+    function toggleSection(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.classList.toggle('hidden');
+      }
+    }
+  
+    function showIoddTab(tab) {
+      const tabs = ['identification', 'parameter', 'observation', 'diagnosis'];
+      tabs.forEach(t => {
+        document.getElementById(`iodd-${t}`).classList.add('hidden');
+        document.getElementById(`btn-${t}`).classList.remove('active');
+      });
+      document.getElementById(`iodd-${tab}`).classList.remove('hidden');
+      document.getElementById(`btn-${tab}`).classList.add('active');
+    }
+  </script>
+  <style>
+    .hidden {
+      display: none;
+    }
+    .upload-btn {
+      background-color: #fbb04c;
+      color: var(--text);
+      transition: background-color 0.2s ease;
+    }
+    .upload-btn.active {
+      background-color: #e88b00 !important;
+      color: #000 !important;
+      font-weight: bold;
+    }
+  </style>
+  <div id="port5-content" class="table-container">
+    <p>Port 5 details...</p>
+  </div>
+  <div id="port6-content" class="table-container">
+    <p>Port 6 details...</p>
+  </div>
+  <div id="port7-content" class="table-container">
+    <p>Port 7 details...</p>
+  </div>
+  <div id="port8-content" class="table-container">
+    <p>Port 8 details...</p>
+  </div>
+</div>
+<div id="eds-creation" class="container">
+  <div class="port-menu">
+    <a onclick="showSubPage('eip-configuration', this, 'port-menu')" class="active">E/IP Configuration</a>
+    <a onclick="showSubPage('calculated-values', this, 'port-menu')">Select Data</a>
+    <a onclick="showSubPage('eds-summary', this, 'port-menu')">Summary</a>
+  </div>
+
+  <div id="eip-configuration" class="table-container visible">
+    <h2 style="color: #f90; margin-bottom: 10px;">EtherNet/IP Configuration</h2>
+    <div style="margin-bottom: 20px;">
+      <h3 style="color: #f90;">Mode</h3>
+      <p>Please select how to configure the EtherNet/IP process images.</p>
+      <label><input type="radio" name="mode" checked> Item placement not aligned, no UDT support</label><br>
+      <label><input type="radio" name="mode"> Item placement aligned, UDT support</label>
+    </div>
+    <hr style="border: 1px solid #444; margin: 20px 0;">
+    <div style="margin-bottom: 20px;">
+      <h3 style="color: #f90;">Process Image</h3>
+      <ul style="line-height: 1.8; list-style-type: disc; margin-left: 20px;">
+        <li>Input: 7 items (23 bytes)</li>
+        <li>Output: 2 items (5 bytes)</li>
+        <li>Total: 9 items (28 bytes)</li>
+        <li>Admin. data: 0 bytes</li>
+        <li>Free: 996 bytes</li>
+      </ul>
+    </div>
+    <hr style="border: 1px solid #444; margin: 20px 0;">
+    <div style="margin-bottom: 20px;">
+      <h3 style="color: #f90;">Export Process Image Details</h3>
+      <p>Export a detailed description of the contents (data points) of the configured EtherNet/IP process image.</p>
+      <button title="Export" class="upload-btn">Export</button>
+    </div>
+    <hr style="border: 1px solid #444; margin: 20px 0;">
+    <div>
+      <h3 style="color: #f90;">Export Electronic Data Sheet (EDS) File</h3>
+      <p>Export the certified EtherNet/IP Electronic Data Sheet (EDS) file for the VSE151 diagnostic electronics.</p>
+      <button title="Export EDS" class="upload-btn">Export EDS</button>
+    </div>
+  </div>
+
+
+  <div id="calculated-values" class="table-container">
+  <h2>Select Data</h2>
+  <p>Select input and output values by checking the boxes next to each data point for each port. Adjust scaling and representation settings as needed.</p>
+  <form>
+    <table>
+      <thead>
+<tr>
+  <th>Port</th>
+  <th>Input Values</th>
+  <th>Input Scaling</th>
+  <th>Input Type</th>
+  <th>Output Values</th>
+  <th>Output Scaling</th>
+  <th>Output Type</th>
+</tr>
+</thead>
+      <tbody>
+<tr>
+  <td>Port 1</td>
+  <td><em>No sensor connected</em></td>
+  <td><em>N/A</em></td>
+  <td><em>N/A</em></td>
+  <td><em>No sensor connected</em></td>
+  <td><em>N/A</em></td>
+  <td><em>N/A</em></td>
+</tr>
+<tr>
+  <td>Port 2</td>
+  <td><em>N/A</em></td>
+  <td><em>N/A</em></td>
+  <td><select><option>Float</option><option>Integer</option></select></td>
+  <td><em>No sensor connected</em></td>
+  <td><em>N/A</em></td>
+  <td><em>N/A</em></td>
+</tr>
+<tr>
+  <td>Port 3<br><small style="color: var(--accent); font-weight: bold;">SUH401</small></td>
+  <td>
+    <label><input type="checkbox" checked> Totalizer</label><br>
+    <label><input type="checkbox" checked> Flow</label><br>
+    <label><input type="checkbox" checked> Temperature</label><br>
+    <label><input type="checkbox" checked> Device Status</label><br>
+    <label><input type="checkbox" checked> Out1</label><br>
+    <label><input type="checkbox" checked> Out2</label>
+  </td>
+  <td style="min-width: 200px;">
+  <input type="number" value="264.172" step="0.1"><br>
+  <input type="number" value="0.00440287" step="0.1"><br>
+  <input type="text" value="0.018 + 32"><br>
+  <br>
+  <br>
+  <br>
+</td>
+  <td>
+    <select>
+      <option>Float</option>
+      <option>Int</option>
+      <option>Sint</option>
+      <option>Bool</option>
+    </select><br>
+    <select>
+      <option>Float</option>
+      <option>Int</option>
+      <option>Sint</option>
+      <option>Bool</option>
+    </select><br>
+    <select>
+      <option>Float</option>
+      <option>Int</option>
+      <option>Sint</option>
+      <option>Bool</option>
+    </select>
+    <br>
+    <br>
+    <br>
+    <br>
+  </td>
+
+  <td>
+  <label><input type="checkbox" checked> Flow Override</label><br>
+  <label><input type="checkbox" checked> Totalizer Reset</label>
+  </td>
+  <td><em>N/A</em></td>
+  <td>
+    <select>
+      <option>Bool</option>
+      <option>Int</option>
+      <option>Sint</option>
+      <option>Float</option>
+    </select><br>
+    <select>
+      <option>Bool</option>
+      <option>Int</option>
+      <option>Sint</option>
+      <option>Float</option>
+    </select><br>
+</tr>
+<tr>
+  <td>Port 4<br><small style="color: var(--accent); font-weight: bold;">TN2511</small></td>
+  <td><label><input type="checkbox" checked> Temperature</label></td>
+  <td><input type="number" value="1.0" step="0.1"></td>
+  <td><select><option>Float</option><option>Int</option><option>Sint</option><option>Bool</option></select></td>
+  <td><em>None</em></td>
+  <td><em>N/A</em></td>
+  <td><em>N/A</em></td>
+</tr>
+<tr>
+  <td>Port 5</td>
+  <td><em>No sensor connected</em></td>
+  <td><em>N/A</em></td>
+  <td><em>N/A</em></td>
+  <td><em>No sensor connected</em></td>
+  <td><em>N/A</em></td>
+  <td><em>N/A</em></td>
+</tr>
+<tr>
+  <td>Port 6</td>
+  <td><em>No sensor connected</em></td>
+  <td><em>N/A</em></td>
+  <td><em>N/A</em></td>
+  <td><em>No sensor connected</em></td>
+  <td><em>N/A</em></td>
+  <td><em>N/A</em></td>
+</tr>
+<tr>
+  <td>Port 7</td>
+  <td><em>No sensor connected</em></td>
+  <td><em>N/A</em></td>
+  <td><em>N/A</em></td>
+  <td><em>No sensor connected</em></td>
+  <td><em>N/A</em></td>
+  <td><em>N/A</em></td>
+</tr>
+<tr>
+  <td>Port 8</td>
+  <td><em>No sensor connected</em></td>
+  <td><em>N/A</em></td>
+  <td><em>N/A</em></td>
+  <td><em>No sensor connected</em></td>
+  <td><em>N/A</em></td>
+  <td><em>N/A</em></td>
+</tr>
+</tbody>
+    </table>
+    <div style="margin-top: 20px;">
+      <button class="upload-btn" type="submit">Apply Selection</button>
+    </div>
+  </form>
+</div>
+<div id="eds-summary" class="table-container">
+    <h2>EDS Summary</h2>
+    <p>This page summarizes the EDS (Electronic Data Sheet) configuration based on selected input/output values and process image settings.</p>
+
+    <h3 style="margin-top: 20px;">Assembly 100</h3>
+    <p>Assembly ID: 100 &nbsp;&nbsp;|&nbsp;&nbsp; Size: 16 bytes</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Offset</th>
+          <th>Data Point</th>
+          <th>Type</th>
+          <th>Size</th>
+          <th>Dexcription</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>0</td>
+          <td>Totalizer</td>
+          <td>FLOAT</td>
+          <td>4 bytes</td>
+          <td>P3 - SUH401 Totalizer Value</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Flow</td>
+          <td>INT</td>
+          <td>2 bytes</td>
+          <td>P3 - SUH401 Flow Rate</td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td>Temperature</td>
+          <td>INT</td>
+          <td>2 bytes</td>
+          <td>P4 - TN2511 Temperature</td>
+        </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 style="margin-top: 30px;">Assembly 150</h3>
+    <p>Assembly ID: 150 &nbsp;&nbsp;|&nbsp;&nbsp; Size: 8 bytes</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Offset</th>
+          <th>Data Point</th>
+          <th>Type</th>
+          <th>Size</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>0</td>
+          <td>Flow Override</td>
+          <td>BOOL</td>
+          <td>1 byte</td>
+          <td>P3 - SUH401 Flow Overide</td>
+        </tr>
+        <tr>
+          <td>1</td>
+          <td>Totalizer Reset</td>
+          <td>BOOL</td>
+          <td>1 byte</td>
+          <td>P3 - SUH401 Totalizer Reset</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="margin-top: 24px; display: flex; gap: 12px;">
+      <button class="upload-btn" onclick="exportTableToCSV('eds_summary.csv')">Export CSV</button>
+      <button class="upload-btn" onclick="window.print()">Download PDF</button>
+      <button class="upload-btn" onclick="window.print()">Export EDS</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function exportTableToCSV(filename) {
+  let csv = [];
+  document.querySelectorAll('#eds-summary table').forEach(table => {
+    const rows = table.querySelectorAll('tr');
+    rows.forEach(row => {
+      const cols = row.querySelectorAll('td, th');
+      const rowData = Array.from(cols).map(col => '"' + col.innerText + '"');
+      csv.push(rowData.join(","));
+    });
+    csv.push("\n");
+  });
+  const csvFile = new Blob([csv.join("\n")], { type: 'text/csv' });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(csvFile);
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+window.addEventListener('DOMContentLoaded', () => {
+  document.body.classList.add('light-mode');
+  toggleTheme(); // applies the light theme variables
+  autoDetectSensorValues(3);
+});
+</script>
+
