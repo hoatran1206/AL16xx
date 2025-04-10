@@ -352,6 +352,7 @@ window.addEventListener('DOMContentLoaded', () => {
   autoDetectSensorValues(3);
 });
 </script>
+
 <div id="attached-devices" class="container">
   <div class="port-menu">
     <a onclick="showSubPage('iodd-content', this, 'port-menu')" class="active">Import IODD</a>
@@ -431,7 +432,7 @@ window.addEventListener('DOMContentLoaded', () => {
       </tbody>
     </table>
   </div>
-  
+
   <!-- Port 4 Additional Tabs -->
   <div id="port4-tabs" class="table-container">
     <div class="port-menu">
@@ -459,7 +460,7 @@ window.addEventListener('DOMContentLoaded', () => {
     <p>Port 3 details...</p>
   </div>
   <div id="port4-content" class="table-container">
-    <div onclick="toggleSection('port4-details')" style="background-color: #f90; color: #000; padding: 10px 16px; border-radius: 6px; font-weight: bold; cursor: pointer;">
+    <div onclick="togglePort4Section('port4-details')" style="background-color: #f90; color: #000; padding: 10px 16px; border-radius: 6px; font-weight: bold; cursor: pointer;">
       General Information
     </div>
     <div id="port4-details" class="hidden">
@@ -499,7 +500,7 @@ window.addEventListener('DOMContentLoaded', () => {
       </section>
     </div>
   
-    <div onclick="toggleSection('port4-process')" style="background-color: #f90; color: #000; padding: 10px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 20px;">
+    <div onclick="togglePort4Section('port4-process')" style="background-color: #f90; color: #000; padding: 10px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 20px;">
       Process Data
     </div>
     <div id="port4-process" class="hidden">
@@ -520,7 +521,7 @@ window.addEventListener('DOMContentLoaded', () => {
       </section>
     </div>
 
-    <div onclick="toggleSection('port4-iodd')" style="background-color: #f90; color: #000; padding: 10px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 20px;">
+    <div onclick="togglePort4Section('port4-iodd')" style="background-color: #f90; color: #000; padding: 10px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 20px;">
       Parameter (IODD)
     </div>
     <div id="port4-iodd" class="hidden">
@@ -552,7 +553,7 @@ window.addEventListener('DOMContentLoaded', () => {
       </section>
     </div>
 
-    <div onclick="toggleSection('port4-isdu')" style="background-color: #f90; color: #000; padding: 10px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 20px;">
+    <div onclick="togglePort4Section('port4-isdu')" style="background-color: #f90; color: #000; padding: 10px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 20px;">
       ISDU Parameter
     <div id="port4-isdu" class="hidden">
       <section>
@@ -561,7 +562,7 @@ window.addEventListener('DOMContentLoaded', () => {
     </div>
     </div>
   
-    <div onclick="toggleSection('port4-event')" style="background-color: #f90; color: #000; padding: 10px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 20px;">
+    <div onclick="togglePort4Section('port4-event')" style="background-color: #f90; color: #000; padding: 10px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 20px;">
       Events Data
     <div id="port4-event" class="hidden">
       <section>
@@ -571,7 +572,7 @@ window.addEventListener('DOMContentLoaded', () => {
     </div>
   </div>
   <script>
-    function toggleSection(id) {
+    function togglePort4Section(id) {
       const el = document.getElementById(id);
       if (el) {
         el.classList.toggle('hidden');
@@ -616,6 +617,7 @@ window.addEventListener('DOMContentLoaded', () => {
     <p>Port 8 details...</p>
   </div>
 </div>
+
 <div id="eds-creation" class="container">
   <div class="port-menu">
     <a onclick="showSubPage('eip-configuration', this, 'port-menu')" class="active">E/IP Configuration</a>
