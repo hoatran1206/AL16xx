@@ -657,155 +657,232 @@ window.addEventListener('DOMContentLoaded', () => {
   </div>
 
 
-  <div id="calculated-values" class="table-container">
-  <h2>Select Data</h2>
-  <p>Select input and output values by checking the boxes next to each data point for each port. Adjust scaling and representation settings as needed.</p>
-  <form>
-    <table>
-      <thead>
-<tr>
-  <th>Port</th>
-  <th>Input Values</th>
-  <th>Input Scaling</th>
-  <th>Input Type</th>
-  <th>Output Values</th>
-  <th>Output Scaling</th>
-  <th>Output Type</th>
-</tr>
-</thead>
+  <div id="calculated-values" class="table-container visible">
+    <h2 style="color: #f90;">Select Data</h2>
+    <p>Select input and output values by checking the boxes next to each data point for each port. Adjust scaling and representation settings as needed.</p>
+
+    <style>
+      .collapsible-section .section-toggle {
+        color: #f90;
+        font-weight: bold;
+        cursor: pointer;
+        padding: 6px 0;
+        margin-top: 10px;
+        display: inline-block;
+      }
+      .collapsible-section .section-content {
+        display: none;
+        margin-top: 10px;
+      }
+      .collapsible-section.expanded .section-content {
+        display: block;
+      }
+    </style>
+
+    <script>
+      function toggleSection(el) {
+        const section = el.closest('.collapsible-section');
+        section.classList.toggle('expanded');
+        const isExpanded = section.classList.contains('expanded');
+
+        const type = el.textContent.trim().replace(/^▶/, '').trim();
+
+        if (type === 'PDI Mapping') {
+          const row = section.closest('tr');
+          const inputScaling = row.querySelectorAll('td:nth-child(3) input');
+          const inputType = row.querySelectorAll('td:nth-child(4) select');
+          inputScaling.forEach(input => input.style.display = isExpanded ? '' : 'none');
+          inputType.forEach(select => select.style.display = isExpanded ? '' : 'none');
+        }
+
+        if (type === 'PDO Mapping') {
+          const row = section.closest('tr');
+          const outputScaling = row.querySelectorAll('td:nth-child(6) .na-text');
+          const outputType = row.querySelectorAll('td:nth-child(7) select');
+          outputScaling.forEach(el => el.style.display = isExpanded ? '' : 'none');
+          outputType.forEach(select => select.style.display = isExpanded ? '' : 'none');
+        }
+      }
+    </script>
+
+    <table style="width: 100%; border-collapse: collapse; margin-top: 20px; border: 1px solid #ccc;">
+      <thead style="background-color: #f2f2f2;">
+        <tr>
+          <th style="text-align: left; padding: 8px; border: 1px solid #ccc;">Port</th>
+          <th style="text-align: left; padding: 8px; border: 1px solid #ccc;">Input Values</th>
+          <th style="text-align: left; padding: 8px; border: 1px solid #ccc;">Input Scaling</th>
+          <th style="text-align: left; padding: 8px; border: 1px solid #ccc;">Input Type</th>
+          <th style="text-align: left; padding: 8px; border: 1px solid #ccc;">Output Values</th>
+          <th style="text-align: left; padding: 8px; border: 1px solid #ccc;">Output Scaling</th>
+          <th style="text-align: left; padding: 8px; border: 1px solid #ccc;">Output Type</th>
+        </tr>
+      </thead>
       <tbody>
 <tr>
-  <td>Port 1</td>
-  <td><em>No sensor connected</em></td>
-  <td><em>N/A</em></td>
-  <td><em>N/A</em></td>
-  <td><em>No sensor connected</em></td>
-  <td><em>N/A</em></td>
-  <td><em>N/A</em></td>
+  <td style="padding: 8px; border: 1px solid #ccc;">Port 1</td>
+  <td style="padding: 8px; border: 1px solid #ccc;">No sensor connected</td>
+  <td style="padding: 8px; border: 1px solid #ccc;">N/A</td>
+  <td style="padding: 8px; border: 1px solid #ccc;">N/A</td>
+  <td style="padding: 8px; border: 1px solid #ccc;">N/A</td>
+  <td style="padding: 8px; border: 1px solid #ccc;">N/A</td>
+  <td style="padding: 8px; border: 1px solid #ccc;">N/A</td>
+  
 </tr>
 <tr>
-  <td>Port 2</td>
-  <td><em>N/A</em></td>
-  <td><em>N/A</em></td>
-  <td><select><option>Float</option><option>Integer</option></select></td>
-  <td><em>No sensor connected</em></td>
-  <td><em>N/A</em></td>
-  <td><em>N/A</em></td>
+  <td style="padding: 8px; border: 1px solid #ccc;">Port 2</td>
+  <td style="padding: 8px; border: 1px solid #ccc;">No sensor connected</td>
+  <td style="padding: 8px; border: 1px solid #ccc;">N/A</td>
+  <td style="padding: 8px; border: 1px solid #ccc;">N/A</td>
+  <td style="padding: 8px; border: 1px solid #ccc;">N/A</td>
+  <td style="padding: 8px; border: 1px solid #ccc;">N/A</td>
+  <td style="padding: 8px; border: 1px solid #ccc;">N/A</td>
 </tr>
+<!-- Port 3 -->
 <tr>
-  <td>Port 3<br><small style="color: var(--accent); font-weight: bold;">SUH401</small></td>
-  <td>
-    <label><input type="checkbox" checked> Totalizer</label><br>
-    <label><input type="checkbox" checked> Flow</label><br>
-    <label><input type="checkbox" checked> Temperature</label><br>
-    <label><input type="checkbox" checked> Device Status</label><br>
-    <label><input type="checkbox" checked> Out1</label><br>
-    <label><input type="checkbox" checked> Out2</label>
+  <td style="padding: 8px; border: 1px solid #ccc;">Port 3<br><small style="color: #f90; font-weight: bold;">SUH401</small></td>
+  <td style="padding: 8px; border: 1px solid #ccc;">
+    <div class="collapsible-section expanded">
+      <div class="section-toggle" onclick="toggleSection(this)">▶ PDI Mapping</div>
+      <div class="section-content">
+        <label><input type="checkbox" checked> Totalizer</label><br>
+        <label><input type="checkbox" checked> Flow</label><br>
+        <label><input type="checkbox" checked> Temperature</label><br>
+        <label><input type="checkbox" checked> Device Status</label><br>
+        <label><input type="checkbox" checked> Out1</label><br>
+        <label><input type="checkbox" checked> Out2</label>
+      </div>
+    </div>
+    <div class="collapsible-section expanded">
+      <div class="section-toggle" onclick="toggleSection(this)">▶ PQI Mapping</div>
+      <div class="section-content">
+        <label><input type="checkbox" checked> IOL Mode</label><br>
+        <label><input type="checkbox" checked> Dev Not Conn</label><br>
+        <label><input type="checkbox" checked> Invalid Data</label><br>
+        <label><input type="checkbox" checked> Wrong VID / DID</label><br>
+        <label><input type="checkbox" checked> Wrong Cycle Time</label><br>
+        <label><input type="checkbox" checked> Wrong PD Input Length</label><br>
+        <label><input type="checkbox" checked> Wrong PD Output Length</label><br>
+        <label><input type="checkbox" checked> Diagnosis Present</label>
+      </div>
+    </div>
   </td>
-  <td style="min-width: 200px;">
-  <input type="number" value="264.172" step="0.1"><br>
-  <input type="number" value="0.00440287" step="0.1"><br>
-  <input type="text" value="0.018 + 32"><br>
-  <br>
-  <br>
-  <br>
-</td>
-  <td>
-    <select>
-      <option>Float</option>
-      <option>Int</option>
-      <option>Sint</option>
-      <option>Bool</option>
-    </select><br>
-    <select>
-      <option>Float</option>
-      <option>Int</option>
-      <option>Sint</option>
-      <option>Bool</option>
-    </select><br>
-    <select>
-      <option>Float</option>
-      <option>Int</option>
-      <option>Sint</option>
-      <option>Bool</option>
-    </select>
+  <td style="padding: 8px; vertical-align: top; border: 1px solid #ccc;">
     <br>
     <br>
-    <br>
-    <br>
+    <input type="number" value="264.172" style="width: 80px;"><br>
+    <input type="number" value="0.00440287" style="width: 80px;"><br>
+    <input type="text" value="0.018 + 32" style="width: 80px;">
   </td>
+  <td style="padding: 8px; vertical-align: top; border: 1px solid #ccc;">
+    <br>
+    <br>
+    <select><option>Float</option></select><br>
+    <select><option>Float</option></select><br>
+    <select><option>Float</option></select>
+  </td>
+  <td style="padding: 8px; vertical-align: top; border: 1px solid #ccc;">
+    <div class="collapsible-section expanded">
+      <div class="section-toggle" onclick="toggleSection(this)">▶ PDO Mapping</div>
+      <div class="section-content">
+        <label><input type="checkbox" checked> Flow Override</label><br>
+        <label><input type="checkbox" checked> Totalizer Reset</label>
+      </div>
+    </div>
+  </td>
+  <td style="padding: 8px; vertical-align: top; border: 1px solid #ccc;">
+    <br>
+    <br>
+    <div class="na-text"><em>N/A</em></div>
+  </td>
+  <td style="padding: 8px; vertical-align: top; border: 1px solid #ccc;">
+    <br>
+    <br>
+    <select><option>Bool</option></select><br>
+    <select><option>Bool</option></select>
+  </td>
+</tr>
 
-  <td>
-  <label><input type="checkbox" checked> Flow Override</label><br>
-  <label><input type="checkbox" checked> Totalizer Reset</label>
+<!-- Port 4 -->
+<tr>
+  <td style="padding: 8px; border: 1px solid #ccc;">Port 4<br><small style="color: #f90; font-weight: bold;">TN2511</small></td>
+  <td style="padding: 8px; border: 1px solid #ccc;">
+    <div class="collapsible-section expanded">
+      <div class="section-toggle" onclick="toggleSection(this)">▶ PDI Mapping</div>
+      <div class="section-content">
+        <label><input type="checkbox"> Temperature</label>
+      </div>
+    </div>
+    <div class="collapsible-section expanded">
+      <div class="section-toggle" onclick="toggleSection(this)">▶ PQI Mapping</div>
+      <div class="section-content">
+        <label><input type="checkbox" checked> IOL Mode</label><br>
+        <label><input type="checkbox" checked> Dev Not Conn</label><br>
+        <label><input type="checkbox" checked> Invalid Data</label><br>
+        <label><input type="checkbox" checked> Wrong VID / DID</label><br>
+        <label><input type="checkbox" checked> Wrong Cycle Time</label><br>
+        <label><input type="checkbox" checked> Wrong PD Input Length</label><br>
+        <label><input type="checkbox" checked> Wrong PD Output Length</label><br>
+        <label><input type="checkbox" checked> Diagnosis Present</label>
+      </div>
+    </div>
   </td>
-  <td><em>N/A</em></td>
-  <td>
-    <select>
-      <option>Bool</option>
-      <option>Int</option>
-      <option>Sint</option>
-      <option>Float</option>
-    </select><br>
-    <select>
-      <option>Bool</option>
-      <option>Int</option>
-      <option>Sint</option>
-      <option>Float</option>
-    </select><br>
+  <td style="padding: 8px; vertical-align: top; border: 1px solid #ccc;">
+    <br>
+    <input type="number" placeholder="1.0" style="width: 80px;">
+  </td>
+  <td style="padding: 8px; vertical-align: top; border: 1px solid #ccc;">
+    <br>
+    <select><option>Float</option>
+    <option>Sint</option>
+   <option>Int</option></select>
+  </td>
+  <td style="padding: 8px; border: 1px solid #ccc;"><em>None</em></td>
+  <td style="padding: 8px; border: 1px solid #ccc;"><div class="na-text"><em>N/A</em></div></td>
+  <td style="padding: 8px; border: 1px solid #ccc;"><em>N/A</em></td>
 </tr>
 <tr>
-  <td>Port 4<br><small style="color: var(--accent); font-weight: bold;">TN2511</small></td>
-  <td><label><input type="checkbox" checked> Temperature</label></td>
-  <td><input type="number" value="1.0" step="0.1"></td>
-  <td><select><option>Float</option><option>Int</option><option>Sint</option><option>Bool</option></select></td>
-  <td><em>None</em></td>
-  <td><em>N/A</em></td>
-  <td><em>N/A</em></td>
+  <td style="padding: 8px; border: 1px solid #ccc;">Port 5</td>
+  <td style="padding: 8px; border: 1px solid #ccc;">No sensor connected</td>
+  <td style="padding: 8px; border: 1px solid #ccc;">N/A</td>
+  <td style="padding: 8px; border: 1px solid #ccc;">N/A</td>
+  <td style="padding: 8px; border: 1px solid #ccc;">N/A</td>
+  <td style="padding: 8px; border: 1px solid #ccc;">N/A</td>
+  <td style="padding: 8px; border: 1px solid #ccc;">N/A</td>
 </tr>
 <tr>
-  <td>Port 5</td>
-  <td><em>No sensor connected</em></td>
-  <td><em>N/A</em></td>
-  <td><em>N/A</em></td>
-  <td><em>No sensor connected</em></td>
-  <td><em>N/A</em></td>
-  <td><em>N/A</em></td>
+  <td style="padding: 8px; border: 1px solid #ccc;">Port 6</td>
+  <td style="padding: 8px; border: 1px solid #ccc;">No sensor connected</td>
+  <td style="padding: 8px; border: 1px solid #ccc;">N/A</td>
+  <td style="padding: 8px; border: 1px solid #ccc;">N/A</td>
+  <td style="padding: 8px; border: 1px solid #ccc;">N/A</td>
+  <td style="padding: 8px; border: 1px solid #ccc;">N/A</td>
+  <td style="padding: 8px; border: 1px solid #ccc;">N/A</td>
 </tr>
 <tr>
-  <td>Port 6</td>
-  <td><em>No sensor connected</em></td>
-  <td><em>N/A</em></td>
-  <td><em>N/A</em></td>
-  <td><em>No sensor connected</em></td>
-  <td><em>N/A</em></td>
-  <td><em>N/A</em></td>
+  <td style="padding: 8px; border: 1px solid #ccc;">Port 7</td>
+  <td style="padding: 8px; border: 1px solid #ccc;">No sensor connected</td>
+  <td style="padding: 8px; border: 1px solid #ccc;">N/A</td>
+  <td style="padding: 8px; border: 1px solid #ccc;">N/A</td>
+  <td style="padding: 8px; border: 1px solid #ccc;">N/A</td>
+  <td style="padding: 8px; border: 1px solid #ccc;">N/A</td>
+  <td style="padding: 8px; border: 1px solid #ccc;">N/A</td>
 </tr>
 <tr>
-  <td>Port 7</td>
-  <td><em>No sensor connected</em></td>
-  <td><em>N/A</em></td>
-  <td><em>N/A</em></td>
-  <td><em>No sensor connected</em></td>
-  <td><em>N/A</em></td>
-  <td><em>N/A</em></td>
-</tr>
-<tr>
-  <td>Port 8</td>
-  <td><em>No sensor connected</em></td>
-  <td><em>N/A</em></td>
-  <td><em>N/A</em></td>
-  <td><em>No sensor connected</em></td>
-  <td><em>N/A</em></td>
-  <td><em>N/A</em></td>
+  <td style="padding: 8px; border: 1px solid #ccc;">Port 8</td>
+  <td style="padding: 8px; border: 1px solid #ccc;">No sensor connected</td>
+  <td style="padding: 8px; border: 1px solid #ccc;">N/A</td>
+  <td style="padding: 8px; border: 1px solid #ccc;">N/A</td>
+  <td style="padding: 8px; border: 1px solid #ccc;">N/A</td>
+  <td style="padding: 8px; border: 1px solid #ccc;">N/A</td>
+  <td style="padding: 8px; border: 1px solid #ccc;">N/A</td>
 </tr>
 </tbody>
     </table>
     <div style="margin-top: 20px;">
       <button class="upload-btn" type="submit">Apply Selection</button>
     </div>
-  </form>
 </div>
+
 <div id="eds-summary" class="table-container">
     <h2>EDS Summary</h2>
     <p>This page summarizes the EDS (Electronic Data Sheet) configuration based on selected input/output values and process image settings.</p>
@@ -838,12 +915,26 @@ window.addEventListener('DOMContentLoaded', () => {
           <td>P3 - SUH401 Flow Rate</td>
         </tr>
         <tr>
-          <td>9</td>
+          <td>6</td>
+          <td>Port 3 PQI</td>
+          <td>SINT</td>
+          <td>1 bytes</td>
+          <td>P3 - Diagnostic Info</td>
+        </tr>
+        <tr>
+          <td>7</td>
           <td>Temperature</td>
           <td>INT</td>
           <td>2 bytes</td>
           <td>P4 - TN2511 Temperature</td>
         </td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td>Port 4 PQI</td>
+          <td>SINT</td>
+          <td>1 bytes</td>
+          <td>P4 - Diagnostic Info</td>
         </tr>
       </tbody>
     </table>
